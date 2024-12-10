@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineAI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>CineAI: Your Personal Movie Assistant</h1>
+    </header>
+
+    <section>
+        <h2>Ask for Movie Recommendations</h2>
+        <form method="POST" action="/recommend">
+            <label for="genre">Select a Genre:</label><br>
+            <select id="genre" name="genre">
+                <option value="action">Action</option>
+                <option value="comedy">Comedy</option>
+                <option value="drama">Drama</option>
+                <option value="horror">Horror</option>
+                <option value="romance">Romance</option>
+                <option value="science-fiction">Science Fiction</option>
+            </select><br><br>
+            <input type="submit" value="Get Recommendations">
+        </form>
+
+        {% if chatbot_response %}
+            <h3>Movie Recommendations for {{ question }}:</h3>
+            <ul>
+                {% for movie in chatbot_response %}
+                    <li>
+                        <strong>{{ movie.title }}</strong><br>
+                        {% if movie.poster_url %}
+                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" style="width: 150px;">
+                        {% else %}
+                            <em>No poster available</em>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No recommendations available for the selected genre.</p>
+        {% endif %}
+    </section>
+
+   
+</body>
+</html>
