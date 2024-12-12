@@ -1,48 +1,64 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
+font-family: 'Arial', sans-serif;
+background-color: #121212;
+color: #f0f0f0;
+margin: 0;
+padding: 0;
+line-height: 1.6;
 }
 
-header {
-    background: #444;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
+h1, h2 {  /* Style only the headings you're using */
+font-family: 'Georgia', serif;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: #fff;
 }
 
-section {
-    margin: 20px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+h1 {
+font-size: 2em; /* Slightly smaller h1 */
+text-align: center;
+margin: 20px 0; /* Simplified margin */
 }
 
-h1, h2 {
-    color: #444;
+form {
+text-align: center; /* Center the form */
+margin-bottom: 20px;
 }
 
-form input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+ul {  /* Style the movie list */
+list-style: none; /* Remove bullet points */
+padding: 0;
+display: flex;      /* Use flexbox for layout */
+flex-wrap: wrap;   /* Allow items to wrap */
+justify-content: center; /* Center items horizontally */
 }
 
-form input[type="submit"] {
-    background: #444;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+li {  /* Style each movie item */
+background-color: #1e1e1e; /* Darker background for each movie */
+padding: 20px;
+margin: 10px;
+border-radius: 10px;
+width: 300px; /* Set a fixed width for the movie cards */
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+text-align: center; /* Center text within each movie item */
 }
 
-form input[type="submit"]:hover {
-    background: #555;
+img {
+max-width: 100%;
+height: auto;
+display: block;
+margin: 10px auto; /* Center the image */
+border-radius: 8px;
+}
+
+strong { /* Style the movie title */
+color: #ff6347;
+font-size: 1.2em;
+display: block; /* Make it a block element to take full width */
+margin-bottom: 5px;
+}
+
+p { /* Style the movie overview */
+font-size: 1em;
+color: #dcdcdc;
 }

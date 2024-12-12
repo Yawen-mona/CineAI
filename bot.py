@@ -4,131 +4,113 @@ import json
 import requests
 
 client = AzureOpenAI(
-	api_key = os.getenv("AZURE_KEY"),
-	api_version = "2024-10-01-preview",
-	azure_endpoint = os.getenv("AZURE_ENDPOINT")
+    api_key=os.getenv("AZURE_KEY"),
+    api_version="2024-10-01-preview",
+    azure_endpoint=os.getenv("AZURE_ENDPOINT")
 )
 
-# Read TMDB API key
-try:
-    with open("tmdb_key.txt", "r") as key_file:
-        tmdb_key = key_file.read().strip()
-    if not tmdb_key:
-        raise ValueError("TMDB API key is empty. Please check 'tmdb_key.txt'.")
-except FileNotFoundError:
-    raise FileNotFoundError("TMDB API key file 'tmdb_key.txt' not found.")
 
-# TMDB genre mapping
-genre_map = {
-    "action": 28,
-    "comedy": 35,
-    "drama": 18,
-    "horror": 27,
-    "romance": 10749,
-    "science-fiction": 878,
-}
+with open('tmdb_key.txt', 'r') as key_file:
+    tmdb_key = key_file.read()
 
-# Define function to fetch movies by genre
-def films(genre_name):
-    genre_id = genre_map.get(genre_name.lower())
-    if not genre_id:
-        return [{"title": "Invalid genre selected"}]
 
-    url = f"https://api.themoviedb.org/3/discover/movie?api_key={tmdb_key}&with_genres={genre_id}&sort_by=popularity.desc"
-    try:
+messages = [
+    {"role": "system", "content": "You are an enthusiastic movie lover.  When providing movie recommendations, always use the Recommend_film tool to get movie details, including poster_path and show poster. Provide a maximum of 5 recommendations"},
+
+]
+
+# Function to fetch movies using TMDb API
+def films(query):
+        url = f"https://api.themoviedb.org/3/search/movie?api_key={tmdb_key}&sort_by=popularity.desc&query={query}"
+        
+        print(url)
         response = requests.get(url)
-        response.raise_for_status()
         data = response.json()
 
-        # Extract movie titles and poster URLs
-        movies = [
+        movie = [
             {
-                "title": movie["title"],
+                "title": movie["title"], 
+                "overview": movie.get("overview", "No overview available"),
                 "poster_url": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}" if movie.get("poster_path") else None,
+                "vote_average": movie.get("vote_average", 0), #Added vote average
+                "release_date": movie.get("release_date", "N/A") #Added release date
             }
             for movie in data.get("results", [])
         ]
 
-        # Return the top 5 movies or an error message
-        return movies[:5] if movies else [{"title": "No movies found for this genre."}]
-    except requests.RequestException as e:
-        print(f"Error fetching movies: {e}")
-        return [{"title": f"Error fetching movies: {str(e)}"}]
+        
+        return movie[:5]
 
-# Define OpenAI functions for movie recommendations
+   
+# Define tools/functions
 functions = [
     {
         "type": "function",
         "function": {
             "name": "Recommend_film",
-            "description": "Find a recommended film for tonight",
+            "description": "Find a recommend film based on a specific query.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "genre": {
+                    "query": {
                         "type": "string",
-                        "description": "The genre of movies to recommend",
-                    },
+                        "description": "The query for the movie search (e.g., Christmas)."
+                    }
                 },
-                "required": ["genre"],
-            },
-        },
-    },
-]
-
-# Example conversation messages
-messages = [
-    {"role": "system", "content": "You are an enthusiastic movie critic who provides detailed movie recommendations."},
-    {"role": "user", "content": "Recommend a film for tonight."},
-]
-
-# Generate Azure OpenAI completion
-response = client.chat.completions.create(
-    model="GPT-4",
-    messages=messages,
-    tools=functions,
-    tool_choice="auto",
-)
-
-response_message = response.choices[0].message
-gpt_tools = response_message.tool_calls if "tool_calls" in response_message else None
-
-# Handle tool calls if provided
-if gpt_tools:
-    available_functions = {
-        "Recommend_film": films,
-    }
-
-    # Process tool calls
-    messages.append(response_message)
-    for gpt_tool in gpt_tools:
-        function_name = gpt_tool["function"]["name"]
-        function_to_call = available_functions.get(function_name)
-
-        if not function_to_call:
-            print(f"Unknown function: {function_name}")
-            continue
-
-        # Extract function arguments and execute the function
-        function_arguments = json.loads(gpt_tool["function"]["arguments"])
-        genre_name = function_arguments.get("genre", "")
-        function_response = function_to_call(genre_name)
-
-        # Append function response back to messages
-        messages.append(
-            {
-                "tool_call_id": gpt_tool["id"],
-                "role": "tool",
-                "name": function_name,
-                "content": function_response,
+                "required": ["query"]
             }
-        )
+        }
+    }
+]
 
-    # Send final message with function results
-    second_response = client.chat.completions.create(
+def ask_question(user_question):
+    messages.append({"role": "user", "content": user_question})
+# Send the initial request to the chat completion endpoint
+    response = client.chat.completions.create(
         model="GPT-4",
         messages=messages,
+        tools=functions,
+        tool_choice="auto"
     )
-    print(second_response.choices[0].message.content)
-else:
-    print(response.choices[0].message.content)
+
+    response_message = response.choices[0].message
+    gpt_tools = response.choices[0].message.tool_calls
+
+    # If the assistant suggests using tools
+    if gpt_tools:
+        # Map function name to actual Python function
+        available_functions = {
+            "Recommend_film": films
+        }
+
+        # Append the tool's response
+        messages.append(response_message)
+
+        for gpt_tool in gpt_tools:
+            function_name = gpt_tool.function.name
+            function_to_call = available_functions[function_name]
+
+            
+            function_parameters = json.loads(gpt_tool.function.arguments)
+            function_response = function_to_call(function_parameters.get('query'))
+
+                # Add the tool's response to the conversation
+            messages.append(
+                    {
+                            "tool_call_id": gpt_tool.id,
+                            "role": "tool",
+                            "name": function_name,
+                            "content": json.dumps(function_response)
+                    }
+            )
+
+                # Get the assistant's second response
+            second_response = client.chat.completions.create(
+            model="GPT-4",
+            messages=messages
+            )
+            return second_response.choices[0].message.content
+
+    else:
+        # If no tools are suggested, print the assistant's initial response
+        return response.choices[0].message.content

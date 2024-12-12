@@ -1,50 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineAI</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">  <!-- Use url_for -->
+<title>Movie Recommendations</title>
 </head>
 <body>
-    <header>
-        <h1>CineAI: Your Personal Movie Assistant</h1>
-    </header>
+<h1>Ask for Movie Recommendations</h1>
+<form method="POST">
+    <input type="text" name="req_question" placeholder="Enter keywords..." value="{{ question }}" required>
+    <button type="submit">Ask</button>
+</form>
+<hr>
 
-    <section>
-        <h2>Ask for Movie Recommendations</h2>
-        <form method="POST" action="/recommend">
-            <label for="genre">Select a Genre:</label><br>
-            <select id="genre" name="genre">
-                <option value="action">Action</option>
-                <option value="comedy">Comedy</option>
-                <option value="drama">Drama</option>
-                <option value="horror">Horror</option>
-                <option value="romance">Romance</option>
-                <option value="science-fiction">Science Fiction</option>
-            </select><br><br>
-            <input type="submit" value="Get Recommendations">
-        </form>
+{% if chatbot_response %}
+    <div>
+        <h2>Chatbot Response:</h2>
+        {{ chatbot_response | safe }}  <!-- Display the HTML -->
+    </div>
+{% elif movies %} <!-- Check for movies if chatbot_response is empty -->
+    <div>
+        <h2>Recommended Movies:</h2>
+        <ul>
+            {% for movie in movies %}
+                <li>
+                    <strong>{{ movie.title }}</strong>
+                    <p>{{ movie.overview }}</p>
+                    {% if movie.poster_url %}
+                        <img src="{{ movie.poster_url }}" alt="Poster of {{ movie.title }}" >
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-        {% if chatbot_response %}
-            <h3>Movie Recommendations for {{ question }}:</h3>
-            <ul>
-                {% for movie in chatbot_response %}
-                    <li>
-                        <strong>{{ movie.title }}</strong><br>
-                        {% if movie.poster_url %}
-                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" style="width: 150px;">
-                        {% else %}
-                            <em>No poster available</em>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No recommendations available for the selected genre.</p>
-        {% endif %}
-    </section>
+{% endif %}
 
-   
 </body>
 </html>
