@@ -7,7 +7,7 @@ app = Flask(__name__, static_folder='static')
 # set up our landing page
 @app.route('/')
 def index():
-    return render_template('index.html', question="keywords", chatbot_response="", poster_url="")
+    return render_template('index.html', question="", chatbot_response="", poster_url="")
 
 # only use this when posting data!
 @app.route('/', methods=['GET', 'POST'])

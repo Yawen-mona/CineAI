@@ -11,39 +11,35 @@
         <h1>Ask for Movie Recommendations</h1>
         <form method="POST">
             <input type="text" name="req_question" placeholder="Enter keywords..." value="{{ question }}" required>
-            <button type="submit">Ask</button>
+            <button type="submit">Get Recommendations</button>
         </form>
         <hr>
 
+        <div class="main-content">
         {% if chatbot_response %}
-            <div>
-                <h2>Chatbot Response:</h2>
-                {{ chatbot_response | safe }} <!-- Display the HTML -->
+            <h2>Recommendation Films:</h2>
+            <div class="chatbot-response">
+                {{ chatbot_response | safe }}
             </div>
-        {% elif movies %} <!-- Check for movies if chatbot_response is empty -->
-            <div>
-                <h2>Recommended Movies:</h2>
-                {% for movie in movies %}
-                <div class="movie">
-                    <div class="details">
-                        <h2>{{ movie.title }}</h2>
-                        <p class="overview">{{ movie.overview }}</p>
-                        {% if movie.vote_average %}
-                            <p class="vote-average">Rating: {{ movie.vote_average }}/10</p>
-                        {% endif %}
-                        {% if movie.release_date %}
-                            <p class="release-date">Release Date: {{ movie.release_date }}</p>
-                        {% endif %}
-                    </div>
-                    {% if movie.poster_url %}
-                    <div class="poster">
-                        <img src="{{ movie.poster_url }}" alt="Poster of {{ movie.title }}">
-                    </div>
-                    {% endif %}
+        {% elif movies %}
+            <h2>Recommended Movies:</h2>
+            {% for movie in movies %}
+            <div class="movie">
+                <div class="details">
+                    <h2>{{ movie.title }}</h2>
+                    <p>{{ movie.overview }}</p>
+                    <p class="vote-average">Rating: {{ movie.vote_average }}</p>
+                    <p class="release-date">Release Date: {{ movie.release_date }}</p>
                 </div>
-                {% endfor %}
+                {% if movie.poster_url %}
+                <div class="poster">
+                    <img src="{{ movie.poster_url }}" alt="Poster of {{ movie.title }}">
+                </div>
+                {% endif %}
             </div>
+            {% endfor %}
         {% endif %}
     </div>
+</div>
 </body>
 </html>
