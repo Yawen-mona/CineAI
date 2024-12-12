@@ -26,44 +26,26 @@ This project is a **movie recommendation web application** built with Python, Fl
 
 ## Technologies Used
 
-- Backend
-
-  :
-
+- Overview
   - Python 3.x
   - Flask Framework
   - Azure OpenAI GPT-4 API
   - TMDb API (The Movie Database)
-
-- Frontend
-
-  :
-
-  - HTML5
-  - CSS3
-  - Jinja2 Templating
-
 - Libraries
-
-  :
-
   - `requests` (for TMDb API integration)
+  - `openai` (for  AI chatbot response)
+  - `flask` (for  flask format)
   - `markdown` (for rendering chatbot responses)
-
 - Other
-
-  :
-
   - Static files for custom CSS styling
 
 ------
 
 ## Prerequisites
 
-1. Python 3.7+
-2. Pip (Python Package Manager)
-3. TMDb API Key: Obtain one from TMDb's website.
-4. Azure OpenAI API Key: Register and configure an API key in the Azure OpenAI portal.
+1. Python
+2. TMDb API Key: Obtain one from TMDb's website.
+3. Azure OpenAI API Key: Register and configure an API key in the Azure OpenAI portal.
 
 ------
 
@@ -73,14 +55,13 @@ This project is a **movie recommendation web application** built with Python, Fl
 
    ```
    git clone https://github.com/Yawen-mona/CineAI
-   cd movie-recommendations
    ```
 
 2. Set up a virtual environment :
 
    ```
    pip install virtualenv venv
-   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   On Windows: venv\Scripts\activate
    ```
 
 3. Install dependencies:
@@ -145,11 +126,7 @@ graphqlCopy codemovie-recommendations/
 ### TMDb API
 
 - **Endpoint**: `https://api.themoviedb.org/3/search/movie`
-
 - Parameters
-
-  :
-
   - `api_key`: Your TMDb API key
   - `query`: Search term for movies
   - `sort_by`: Sorts results by popularity
