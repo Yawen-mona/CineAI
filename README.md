@@ -1,4 +1,4 @@
-# Movie Recommendations Web Application
+# CineAI - Movie Recommendations Web Application
 
 This project is a **movie recommendation web application** built with Python, Flask, and OpenAI's Azure GPT-4 API. The application allows users to ask for movie recommendations based on specific queries (e.g., genres, themes, or keywords) and receive suggestions with rich details, including movie posters, overviews, ratings, and release dates.
 
@@ -7,20 +7,13 @@ This project is a **movie recommendation web application** built with Python, Fl
 ## Features
 
 - **AI-Driven Recommendations**: Powered by OpenAI's GPT-4 and TMDb API for high-quality movie suggestions.
-
 - **Interactive User Interface**: A user-friendly web interface for entering queries and browsing movie results.
-
 - Detailed Movie Information
-
-  :
-
   - Title
   - Overview
   - Poster Image
   - User Rating
   - Release Date
-
-- **Responsive Design**: Designed for seamless interaction on both desktop and mobile devices.
 
 ------
 
@@ -41,15 +34,20 @@ This project is a **movie recommendation web application** built with Python, Fl
 
 ------
 
-## Prerequisites
+## 📋 Prerequisites
 
-1. Python
-2. TMDb API Key: Obtain one from TMDb's website.
-3. Azure OpenAI API Key: Register and configure an API key in the Azure OpenAI portal.
+1. **API Keys**:
+
+- Azure OpenAI API key and endpoint
+- TMDb API key
+
+1. **Python 3.x**
+2. **pip** (Python package manager)
+3. **Virtual environment** 
 
 ------
 
-## Installation
+## 🚀Installation
 
 1. Clone the repository:
 
@@ -70,20 +68,27 @@ This project is a **movie recommendation web application** built with Python, Fl
    pip install -r requirements.txt
    ```
 
-4. Add API Keys:
+4. Add Keys:
 
-   - Create a file named `tmdb_key.txt` in the root folder and paste your TMDb API key.
+- Create a file named `tmdb_key.txt` in the root folder and paste your TMDb API key.
 
-   - Set the following environment variables:
+- Set the following environment variables:
 
-     ```
-     set AZURE_KEY=your_azure_api_key
-     set AZURE_ENDPOINT=your_azure_api_endpoint
-     ```
+  ```
+  set AZURE_KEY=your_azure_api_key
+  set AZURE_ENDPOINT=your_azure_api_endpoint
+  ```
+
+5. Add TMDb API Key:
+
+```bash
+# Create tmdb_key.txt and add your key
+"your_tmdb_api_key" > tmdb_key.txt
+```
 
 ------
 
-## Usage
+## 💻Usage
 
 1. Run the Flask app:
 
@@ -103,7 +108,7 @@ This project is a **movie recommendation web application** built with Python, Fl
 
 ------
 
-## Folder Structure
+## 📁Folder Structure
 
 ```
 graphqlCopy codemovie-recommendations/
@@ -137,7 +142,7 @@ graphqlCopy codemovie-recommendations/
 
 
 
-## Overview
+## 👏Overview
 
 - **OpenAI**: For providing cutting-edge AI models.
 - **TMDb**: For the movie database and API.
