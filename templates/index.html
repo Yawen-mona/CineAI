@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">  <!-- Use url_for -->
-<title>Movie Recommendations</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"> <!-- Use url_for -->
+    <title>Movie Recommendations</title>
 </head>
 <body>
-<h1>Ask for Movie Recommendations</h1>
-<form method="POST">
-    <input type="text" name="req_question" placeholder="Enter keywords..." value="{{ question }}" required>
-    <button type="submit">Ask</button>
-</form>
-<hr>
+    <div class="container">
+        <h1>Ask for Movie Recommendations</h1>
+        <form method="POST">
+            <input type="text" name="req_question" placeholder="Enter keywords..." value="{{ question }}" required>
+            <button type="submit">Ask</button>
+        </form>
+        <hr>
 
-{% if chatbot_response %}
-    <div>
-        <h2>Chatbot Response:</h2>
-        {{ chatbot_response | safe }}  <!-- Display the HTML -->
-    </div>
-{% elif movies %} <!-- Check for movies if chatbot_response is empty -->
-    <div>
-        <h2>Recommended Movies:</h2>
-        <ul>
-            {% for movie in movies %}
-                <li>
-                    <strong>{{ movie.title }}</strong>
-                    <p>{{ movie.overview }}</p>
+        {% if chatbot_response %}
+            <div>
+                <h2>Chatbot Response:</h2>
+                {{ chatbot_response | safe }} <!-- Display the HTML -->
+            </div>
+        {% elif movies %} <!-- Check for movies if chatbot_response is empty -->
+            <div>
+                <h2>Recommended Movies:</h2>
+                {% for movie in movies %}
+                <div class="movie">
+                    <div class="details">
+                        <h2>{{ movie.title }}</h2>
+                        <p class="overview">{{ movie.overview }}</p>
+                        {% if movie.vote_average %}
+                            <p class="vote-average">Rating: {{ movie.vote_average }}/10</p>
+                        {% endif %}
+                        {% if movie.release_date %}
+                            <p class="release-date">Release Date: {{ movie.release_date }}</p>
+                        {% endif %}
+                    </div>
                     {% if movie.poster_url %}
-                        <img src="{{ movie.poster_url }}" alt="Poster of {{ movie.title }}" >
+                    <div class="poster">
+                        <img src="{{ movie.poster_url }}" alt="Poster of {{ movie.title }}">
+                    </div>
                     {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
-
-{% endif %}
-
 </body>
 </html>
